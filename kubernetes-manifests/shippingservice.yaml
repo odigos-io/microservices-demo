@@ -41,8 +41,6 @@ spec:
         #   value: "1"
         # - name: DISABLE_PROFILER
         #   value: "1"
-        - name: OTEL_COLLECTOR_ADDR
-          value: "collector.keyval-system:55680"
         resources:
           requests:
             cpu: 100m
