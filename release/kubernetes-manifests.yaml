@@ -16,7 +16,7 @@ spec:
       - env:
         - name: PORT
           value: "9555"
-        image: edenfed/adservice:edae583@sha256:433d4beeeb38f96b915f887f7387305a5790895024fd33ecf976365760800c86
+        image: edenfed/adservice:v2.0
         name: server
         ports:
         - containerPort: 9555
@@ -62,7 +62,7 @@ spec:
       - env:
         - name: REDIS_ADDR
           value: redis-cart:6379
-        image: edenfed/cartservice:edae583@sha256:07e850ee5884b37b82c1a550da42610519d907b836952eabf1aa4b4bb4f85b9e
+        image: edenfed/cartservice:v2.0
         name: server
         ports:
         - containerPort: 7070
@@ -120,7 +120,7 @@ spec:
           value: currencyservice:7000
         - name: CART_SERVICE_ADDR
           value: cartservice:7070
-        image: edenfed/checkoutservice:edae583@sha256:2d4ea6f4e2e1a19b252bf2369a36b993570a6fb5a9286ead25eda218ae49ccb4
+        image: edenfed/checkoutservice:v2.0
         name: server
         ports:
         - containerPort: 5050
@@ -165,7 +165,7 @@ spec:
       - env:
         - name: PORT
           value: "7000"
-        image: edenfed/currencyservice:edae583@sha256:80d3417dc01060335be0ebb5b79a9991b54b3fd792694a78588b0c744e2f73c8
+        image: edenfed/currencyservice:v2.0
         name: server
         ports:
         - containerPort: 7000
@@ -214,7 +214,7 @@ spec:
           value: "8080"
         - name: DISABLE_PROFILER
           value: "1"
-        image: edenfed/emailservice:edae583@sha256:3f029a7f0d226419d092975c1a886e72e3c46e8ae1f1ddb0e966f65b61e082be
+        image: edenfed/emailservice:v2.0
         name: server
         ports:
         - containerPort: 8080
@@ -278,7 +278,7 @@ spec:
           value: adservice:9555
         - name: ENV_PLATFORM
           value: aws
-        image: edenfed/frontend:edae583@sha256:ae2bfbc2675e3c1411b36ccc10906a2af722c29218f2bbad176063e908d099a8
+        image: edenfed/frontend:v2.0
         name: server
         ports:
         - containerPort: 8080
@@ -337,7 +337,7 @@ spec:
       - env:
         - name: PORT
           value: "50051"
-        image: edenfed/paymentservice:edae583@sha256:28a857b161202840a4a98e4afa3444fd277c35eccfa7fea3b5e8eec88c87a44c
+        image: edenfed/paymentservice:v2.0
         name: server
         ports:
         - containerPort: 50051
@@ -383,7 +383,7 @@ spec:
       - env:
         - name: PORT
           value: "3550"
-        image: edenfed/productcatalogservice:edae583@sha256:16f9c5537beb5dd70249e22ce378d817b9fd9a2eb0513d1374aa3dc1f5aef062
+        image: edenfed/productcatalogservice:v2.0
         name: server
         ports:
         - containerPort: 3550
@@ -431,7 +431,7 @@ spec:
           value: "8080"
         - name: PRODUCT_CATALOG_SERVICE_ADDR
           value: productcatalogservice:3550
-        image: edenfed/recommendationservice:edae583@sha256:db56ed0c25aa2325bd0d78cb93ccf8cf66dff37962054c5c020d6f70256b8d43
+        image: edenfed/recommendationservice:v2.0
         name: server
         ports:
         - containerPort: 8080
@@ -532,7 +532,7 @@ spec:
       - env:
         - name: PORT
           value: "50051"
-        image: edenfed/shippingservice:edae583@sha256:65ae7cd0d09a76cd6d60195a5fe03aaf538fb4f9bdcf77912d3c3f0fdaf75f9c
+        image: edenfed/shippingservice:v2.0
         name: server
         ports:
         - containerPort: 50051
@@ -558,3 +558,81 @@ spec:
   selector:
     app: shippingservice
   type: ClusterIP
+---
+# Copyright 2018 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loadgenerator
+  annotations:
+    odigos.io/skip: "true"
+spec:
+  selector:
+    matchLabels:
+      app: loadgenerator
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: loadgenerator
+      annotations:
+        sidecar.istio.io/rewriteAppHTTPProbers: "true"
+    spec:
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 5
+      restartPolicy: Always
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      initContainers:
+      - command:
+        - /bin/sh
+        - -exc
+        - |
+          echo "Init container pinging frontend: ${FRONTEND_ADDR}..."
+          STATUSCODE=$(wget --server-response http://${FRONTEND_ADDR} 2>&1 | awk '/^  HTTP/{print $2}')
+          if test $STATUSCODE -ne 200; then
+              echo "Error: Could not reach frontend - Status code: ${STATUSCODE}"
+              exit 1
+          fi
+        name: frontend-check
+        image: busybox:latest
+        env:
+        - name: FRONTEND_ADDR
+          value: "frontend:80"
+      containers:
+      - name: main
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - all
+          privileged: false
+          readOnlyRootFilesystem: true
+        image: edenfed/loadgenerator:v2.0
+        env:
+        - name: FRONTEND_ADDR
+          value: "frontend:80"
+        - name: USERS
+          value: "10"
+        resources:
+          requests:
+            cpu: 300m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
