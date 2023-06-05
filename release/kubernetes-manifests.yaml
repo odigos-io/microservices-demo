@@ -578,6 +578,8 @@ metadata:
   name: loadgenerator
   annotations:
     odigos.io/skip: "true"
+  labels:
+    odigos-instrumentation: disabled
 spec:
   selector:
     matchLabels:
