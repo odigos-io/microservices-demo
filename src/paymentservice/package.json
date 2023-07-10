@@ -11,22 +11,10 @@
   "author": "Jonathan Lui",
   "license": "ISC",
   "dependencies": {
-    "@grpc/proto-loader": "^0.1.0",
-    "@opentelemetry/api": "^1.0.0-rc.0",
-    "@opentelemetry/core": "^0.18.1",
-    "@opentelemetry/exporter-collector-grpc": "^0.18.1",
-    "@opentelemetry/instrumentation": "^0.18.1",
-    "@opentelemetry/node": "^0.18.1",
-    "@opentelemetry/plugin-grpc": "^0.18.1",
-    "@opentelemetry/plugin-http": "^0.18.1",
-    "@opentelemetry/plugin-https": "^0.18.1",
-    "@opentelemetry/tracing": "^0.18.1",
-    "grpc": "^1.22.2",
-    "pino": "^5.6.2",
+    "@grpc/grpc-js": "1.8.17",
+    "@grpc/proto-loader": "0.7.7",
+    "pino": "8.14.1",
     "simple-card-validator": "^1.1.0",
-    "uuid": "^3.2.1"
-  },
-  "devDependencies": {
-    "semistandard": "^12.0.1"
+    "uuid": "^9.0.0"
   }
 }
