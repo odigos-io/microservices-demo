@@ -19,7 +19,10 @@ import random
 import time
 import traceback
 from concurrent import futures
+
+from google.auth.exceptions import DefaultCredentialsError
 import grpc
+
 import demo_pb2
 import demo_pb2_grpc
 from grpc_health.v1 import health_pb2

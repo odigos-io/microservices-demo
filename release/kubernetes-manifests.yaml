@@ -16,7 +16,7 @@ spec:
       - env:
         - name: PORT
           value: "9555"
-        image: edenfed/adservice:v2.0
+        image: edenfed/adservice:v2.1
         name: server
         ports:
         - containerPort: 9555
@@ -62,7 +62,7 @@ spec:
       - env:
         - name: REDIS_ADDR
           value: redis-cart:6379
-        image: edenfed/cartservice:v2.0
+        image: edenfed/cartservice:v2.1
         name: server
         ports:
         - containerPort: 7070
@@ -120,7 +120,7 @@ spec:
           value: currencyservice:7000
         - name: CART_SERVICE_ADDR
           value: cartservice:7070
-        image: edenfed/checkoutservice:v2.0
+        image: edenfed/checkoutservice:v2.1
         name: server
         ports:
         - containerPort: 5050
@@ -165,7 +165,7 @@ spec:
       - env:
         - name: PORT
           value: "7000"
-        image: edenfed/currencyservice:v2.0
+        image: edenfed/currencyservice:v2.1
         name: server
         ports:
         - containerPort: 7000
@@ -214,7 +214,7 @@ spec:
           value: "8080"
         - name: DISABLE_PROFILER
           value: "1"
-        image: edenfed/emailservice:v2.0
+        image: edenfed/emailservice:v2.1
         name: server
         ports:
         - containerPort: 8080
@@ -278,7 +278,7 @@ spec:
           value: adservice:9555
         - name: ENV_PLATFORM
           value: aws
-        image: edenfed/frontend:v2.0
+        image: edenfed/frontend:v2.1
         name: server
         ports:
         - containerPort: 8080
@@ -337,7 +337,7 @@ spec:
       - env:
         - name: PORT
           value: "50051"
-        image: edenfed/paymentservice:v2.0
+        image: edenfed/paymentservice:v2.1
         name: server
         ports:
         - containerPort: 50051
@@ -383,7 +383,7 @@ spec:
       - env:
         - name: PORT
           value: "3550"
-        image: edenfed/productcatalogservice:v2.0
+        image: edenfed/productcatalogservice:v2.1
         name: server
         ports:
         - containerPort: 3550
@@ -431,7 +431,7 @@ spec:
           value: "8080"
         - name: PRODUCT_CATALOG_SERVICE_ADDR
           value: productcatalogservice:3550
-        image: edenfed/recommendationservice:v2.0
+        image: edenfed/recommendationservice:v2.1
         name: server
         ports:
         - containerPort: 8080
@@ -532,7 +532,7 @@ spec:
       - env:
         - name: PORT
           value: "50051"
-        image: edenfed/shippingservice:v2.0
+        image: edenfed/shippingservice:v2.1
         name: server
         ports:
         - containerPort: 50051
@@ -625,7 +625,7 @@ spec:
               - all
           privileged: false
           readOnlyRootFilesystem: true
-        image: edenfed/loadgenerator:v2.0
+        image: edenfed/loadgenerator:v2.1
         env:
         - name: FRONTEND_ADDR
           value: "frontend:80"

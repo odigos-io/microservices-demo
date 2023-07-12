@@ -38,14 +38,14 @@ build:
     context: src/cartservice
   - image: frontend
     context: src/frontend
-  # - image: loadgenerator
-  #   context: src/loadgenerator
+  - image: loadgenerator
+    context: src/loadgenerator
   - image: adservice
     context: src/adservice
   tagPolicy:
     gitCommit: {}
   local:
-    useBuildkit: false
+    useBuildkit: true
 deploy:
   kubectl:
     manifests:
