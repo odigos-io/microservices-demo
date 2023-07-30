@@ -278,7 +278,7 @@ spec:
           value: adservice:9555
         - name: ENV_PLATFORM
           value: aws
-        image: edenfed/frontend:v2.1
+        image: edenfed/frontend:v2.2
         name: server
         ports:
         - containerPort: 8080
