@@ -383,7 +383,7 @@ spec:
       - env:
         - name: PORT
           value: "3550"
-        image: edenfed/productcatalogservice:v2.1
+        image: edenfed/productcatalogservice:v2.2
         name: server
         ports:
         - containerPort: 3550
